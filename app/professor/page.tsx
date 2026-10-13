@@ -1,0 +1,6 @@
+import {requireSectionProfile,assignedSections} from '@/lib/sections-server';
+import Link from 'next/link';
+import {requireUser} from '@/lib/auth';
+import {db,checked} from '@/lib/db';
+import {ProfessorOverview} from '@/components/professor-overview';
+export default async function Professor(){const u=await requireUser('professor');requireSectionProfile(u);const sections=assignedSections(u);const [students,challenges,shortlists]=await Promise.all([db().from('Users').select('id',{count:'exact',head:true}).eq('role','student').in('section',sections),db().from('Challenges').select('id,title,field,published,release_date').eq('professor_id',u.id).order('created_at',{ascending:false}),db().from('Shortlists').select('id,student:Users!student_id!inner(section)',{count:'exact',head:true}).eq('professor_id',u.id).in('student.section',sections)]);checked(students);checked(shortlists);const tasks=checked(challenges)??[];const submissions=tasks.length?checked(await db().from('ChallengeSubmissions').select('id,status,challenge_id,student:Users!student_id!inner(name,section)').in('challenge_id',tasks.map(c=>c.id)).in('student.section',sections).order('updated_at',{ascending:false}).limit(200)):[];return <ProfessorOverview name={u.name} students={students.count??0} challenges={tasks} shortlists={shortlists.count??0} submissions={submissions??[]}/>}

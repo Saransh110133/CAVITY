@@ -1,0 +1,3 @@
+export const DEMO_PHOTO_KEY='cavity-demo-photo';
+export const MAX_PHOTO_LENGTH=360000;
+export function validAvatar(value:unknown):value is string{if(typeof value!=='string'||value.length>MAX_PHOTO_LENGTH||!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(value))return false;try{const bytes=Uint8Array.from(atob(value.split(',')[1]),c=>c.charCodeAt(0));if(bytes.length<33||[137,80,78,71,13,10,26,10].some((v,i)=>bytes[i]!==v)||String.fromCharCode(...bytes.slice(12,16))!=='IHDR')return false;const view=new DataView(bytes.buffer);return view.getUint32(16)>0&&view.getUint32(16)<=256&&view.getUint32(20)>0&&view.getUint32(20)<=256}catch{return false}}

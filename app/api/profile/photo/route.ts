@@ -1,0 +1,5 @@
+import {NextResponse} from 'next/server';
+import {authorize,apiError,HttpError} from '@/lib/api';
+import {db,checked} from '@/lib/db';
+import {validAvatar,MAX_PHOTO_LENGTH} from '@/lib/avatar';
+export async function PUT(req:Request){try{const u=await authorize(req);const reader=req.body?.getReader();if(!reader)throw new HttpError(400,'Missing photo.');const chunks:Uint8Array[]=[];let total=0;while(true){const {done,value}=await reader.read();if(done)break;total+=value.length;if(total>MAX_PHOTO_LENGTH+100){await reader.cancel();throw new HttpError(413,'Photo is too large.')}chunks.push(value)}let payload;try{payload=JSON.parse(Buffer.concat(chunks).toString('utf8'))}catch{throw new HttpError(400,'Invalid photo request.')}if(payload.photo!==null&&!validAvatar(payload.photo))throw new HttpError(400,'Use the profile uploader to select a valid image.');const saved=checked(await db().from('Profiles').update({avatar_data:payload.photo,updated_at:new Date().toISOString()}).eq('user_id',u.id).select('id').maybeSingle());if(!saved)throw new HttpError(404,'Save your profile first.');return NextResponse.json({ok:true})}catch(e){return apiError(e)}}

@@ -1,0 +1,6 @@
+import {z} from 'zod';
+export function allowedEmail(email:string,domain:string) {const d=domain.trim().toLowerCase();return !!d && !d.includes('@') && email.trim().toLowerCase().split('@').length===2 && email.trim().toLowerCase().split('@')[1]===d}
+export const profileSchema = z.object({name:z.string().trim().min(1).max(120).optional(),bio:z.string().trim().max(1200).default(''),skills:z.array(z.string().trim().min(1).max(50)).max(30).transform(v=>[...new Set(v)]).default([]),department:z.string().trim().max(100),leetcode_username:z.string().trim().max(40).regex(/^[a-zA-Z0-9_-]*$/),linkedin_url:z.union([z.literal(''),z.url().max(300).refine(value=>{const u=new URL(value);return u.protocol==='https:' && ['www.linkedin.com','linkedin.com'].includes(u.hostname) && u.pathname.startsWith('/in/') && !u.username && !u.password},'Use an https://www.linkedin.com/in/ profile URL')])});
+export const companySchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(1).max(120),domain:z.string().trim().min(1).max(120),required_skills:z.array(z.string().trim().min(1).max(50)).max(30)});
+export const shortlistSchema = z.object({student_id:z.uuid(),company_id:z.uuid(),status:z.enum(['pending','shortlisted','rejected']),notes:z.string().trim().max(2000)});
+

@@ -1,0 +1,1 @@
+export function Avatar({name,photo,large=false}:{name:string;photo?:string|null;large?:boolean}){return <span className={`profile-avatar ${large?'avatar-large':''}`}>{photo?<img src={photo} alt={`${name}'s profile photo`} width={large?96:50} height={large?96:50}/>:name.split(' ').map(s=>s[0]).slice(0,2).join('')}</span>}

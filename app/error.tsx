@@ -1,0 +1,2 @@
+'use client';
+export default function ErrorPage({reset}:{reset:()=>void}){return <section className="card mx-auto max-w-xl"><h1 className="text-2xl font-bold">This page couldn’t load</h1><p className="muted my-4">Try again in a moment. If this is a new installation, check the Supabase connection and run the database migration.</p><button className="btn" onClick={reset}>Try again</button></section>}

@@ -1,0 +1,3 @@
+'use client';
+import {useEffect,useState} from 'react';
+export function ThemeToggle(){const [dark,setDark]=useState(true);useEffect(()=>{setDark(document.documentElement.classList.contains('dark'))},[]);return <button type="button" className="secondary" aria-label={dark?'Switch to light mode':'Switch to dark mode'} aria-pressed={dark} onClick={()=>{const next=!dark;setDark(next);document.documentElement.classList.toggle('dark',next);document.documentElement.style.colorScheme=next?'dark':'light';try{localStorage.setItem('cavity-theme-cyan',next?'dark':'light')}catch{}}}><span aria-hidden="true" className="mr-2">{dark?'☀':'☾'}</span>{dark?'Light mode':'Dark mode'}</button>}
