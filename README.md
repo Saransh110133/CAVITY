@@ -1,3 +1,6 @@
+# CAVITY
+An open-source, data-driven campus placement and career development platform connecting students and professors. Integrates GitHub, LinkedIn and LeetCode for skill verification, code and project reviews, progress tracking and smarter shortlisting. Features professor dashboards, daily coding challenges, AI resume assistance and placement task lists.
+
 ## Homepage and local database connection
 
 The public homepage at `/` introduces both workspaces with interactive student/professor previews. `/login` opens authentication and `/demo` opens the sample workspace. The student section badge says Selected; the saved section remains unchangeable.
